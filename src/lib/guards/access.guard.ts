@@ -1,8 +1,6 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { plainToClass } from 'class-transformer';
-import { IncomingMessage } from 'http';
-
 
 import { GroupsService } from '../services/groups.service';
 import { TokenService } from '../services/token.service';
@@ -15,15 +13,15 @@ export class AccessGuard implements CanActivate {
     private readonly tokenService: TokenService,
     private readonly groupsService: GroupsService,
   ) {
-    //workaround
+    // workaround
     this.groupsService.fullLoadAll();
   }
 
   public canActivate(context: ExecutionContext): boolean {
-    let handler = context.getClass();
-    let req = context.switchToHttp().getRequest();
-    const authorizationHeader = req.headers['authorization'] ?
-      String(req.headers['authorization']) : null;
+    const handler = context.getHandler();
+    const req = context.switchToHttp().getRequest();
+    const authorizationHeader = req.headers.authorization ?
+      String(req.headers.authorization) : null;
     const roles = this.reflector.get<string[]>('roles', handler);
     const permissions = this.reflector.get<string[]>('permissions', handler);
 
@@ -38,22 +36,23 @@ export class AccessGuard implements CanActivate {
       token = token.trim();
       if (token && this.tokenService.verify(token)) {
         const data: any = this.tokenService.decode(token);
-        req['user'] = plainToClass(User, data);
-        req['user'].groups = data.groups.map(group =>
+        req.user = plainToClass(User, data);
+        req.user.groups = data.groups.map(group =>
           this.groupsService.getGroupByName(group.name),
         );
       }
     }
 
-    const hasRole = roles ? roles.filter(roleName =>
-      req['user'] &&
-      req['user'][roleName],
-    ).length > 0 : null;
+    // const hasRole = roles ? roles.filter(roleName =>
+    //   req['user'] &&
+    //   req['user'][roleName],
+    // ).length > 0 : null;
 
     const hasPermission = permissions ?
-      req['user'] &&
-      req['user'] instanceof User &&
-      req['user'].checkPermissions(permissions) : null;
-    return hasRole === true || hasPermission === true || (hasRole === null && hasPermission === null);
+      req.user &&
+      req.user instanceof User &&
+      req.user.checkPermissions(permissions) : null;
+    // return hasRole === true || hasPermission === true || (hasRole === null && hasPermission === null);
+    return hasPermission === true || (hasPermission === null);
   }
 }
