@@ -1,10 +1,11 @@
-import { Injectable, MethodNotAllowedException } from '@nestjs/common';
+import { HttpStatus, Injectable, MethodNotAllowedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
 import { Repository } from 'typeorm';
 import { TokenService } from './token.service';
 import { CustomError } from '../exceptions/custom.error';
 import { User } from '../entities/user.entity';
+import { HttpException } from '@nestjs/common';
 
 @Injectable()
 export class AccountService {
@@ -74,7 +75,7 @@ export class AccountService {
         });
       }
       if (!object || !object.verifyPassword(options.password)) {
-        throw new CustomError('Wrong password');
+        throw new HttpException('Invalid username or password!', HttpStatus.BAD_REQUEST);
       }
       object = await this.usersRepository.save(object);
       return { user: object, token: this.tokenService.sign(object) };

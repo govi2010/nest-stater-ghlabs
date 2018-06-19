@@ -13,8 +13,6 @@ import {
 } from 'typeorm';
 
 import { Group } from './group.entity';
-
-import { Transform } from 'class-transformer';
 import { CustomValidationError } from '../exceptions/custom-validation.error';
 import { BaseEntity } from './base/base.entity';
 
@@ -100,13 +98,12 @@ export class User extends BaseEntity {
   }
 
   makePassword(password: string) {
-    var h = new hashers.PBKDF2PasswordHasher();
-    var hash = h.encode(password, h.salt());
-    return hash;
+    const h = new hashers.PBKDF2PasswordHasher();
+    return h.encode(password, h.salt());
   }
 
   verifyPassword(password: string) {
-    var h = new hashers.PBKDF2PasswordHasher();
+    const h = new hashers.PBKDF2PasswordHasher();
     return h.verify(password, this.password);
   }
 

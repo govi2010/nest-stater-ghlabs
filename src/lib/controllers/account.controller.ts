@@ -12,7 +12,6 @@ import { AccessGuard } from '../guards/access.guard';
 import { AccountService } from '../services/account.service';
 import { User } from '../entities/user.entity';
 
-
 @ApiUseTags('account')
 @Controller('/account')
 @UseGuards(AccessGuard)
@@ -107,7 +106,6 @@ export class AccountController {
     }
   }
 
-
   @Get()
   @ApiResponse({
     status: HttpStatus.OK,
@@ -115,8 +113,7 @@ export class AccountController {
   })
   async get(@Req() req) {
     try {
-      console.log(JSON.stringify("I am here"));
-      return { 'hello': '' };
+      return { hello: '' };
     } catch (error) {
       throw error;
     }

@@ -22,7 +22,7 @@ export class TokenService {
         groups: user.groups,
       }),
       {
-        expiresIn: "7 days",
+        expiresIn: '7 days',
       },
     );
   }
