@@ -15,6 +15,7 @@ import {
 import { Group } from './group.entity';
 import { CustomValidationError } from '../exceptions/custom-validation.error';
 import { BaseEntity } from './base/base.entity';
+import { Permission } from './permission.entity';
 
 @Entity()
 export class User extends BaseEntity {
@@ -80,6 +81,22 @@ export class User extends BaseEntity {
     },
   })
   groups: Group[];
+
+  @ManyToMany(type => Permission, {
+    cascade: ['remove'],
+  })
+  @JoinTable({
+    name: 'user_permissions',
+    joinColumn: {
+      name: 'user_id',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'permission_id',
+      referencedColumnName: 'id',
+    },
+  })
+  permissions: Permission[];
 
   @BeforeInsert()
   doBeforeInsertion() {

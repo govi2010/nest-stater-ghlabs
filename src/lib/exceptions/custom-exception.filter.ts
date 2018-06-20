@@ -7,11 +7,11 @@ import { CustomError } from './custom.error';
 @Catch(SyntaxError, CustomValidationError, CustomError, JsonWebTokenError)
 export class CustomExceptionFilter implements ExceptionFilter {
     constructor(
-        private _indexFile?: string
+        private _indexFile?: string,
     ) {
 
     }
-    badRequest(response, data: Object) {
+    badRequest(response, data: object) {
         // todo: refactor after update nest to 5 version
         if (
             response.req.originalUrl.indexOf('/api/') !== 0 &&
@@ -37,7 +37,7 @@ export class CustomExceptionFilter implements ExceptionFilter {
                             errors[error.property] = [];
                         }
                         errors[error.property].push(error.constraints[key]);
-                    }
+                    },
                 );
             });
             this.badRequest(response, { validationErrors: errors });
@@ -49,7 +49,7 @@ export class CustomExceptionFilter implements ExceptionFilter {
                 return;
             }
             this.badRequest(response, {
-                message: 'Invalid token'
+                message: 'Invalid token',
             });
             return;
         }
@@ -59,7 +59,7 @@ export class CustomExceptionFilter implements ExceptionFilter {
                 return;
             }
             this.badRequest(response, {
-                message: exception.message
+                message: exception.message,
             });
             return;
         }
@@ -69,7 +69,7 @@ export class CustomExceptionFilter implements ExceptionFilter {
                 return;
             }
             this.badRequest(response, {
-                message: exception.message ? exception.message : String(exception)
+                message: exception.message ? exception.message : String(exception),
             });
             return;
         }
