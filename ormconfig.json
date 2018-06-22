@@ -2,7 +2,7 @@
   "type": "mysql",
   "host": "localhost",
   "port": 3306,
-  "username": "sa",
+  "username": "root",
   "password": "asd123",
   "database": "test",
   "entities": [
