@@ -10,6 +10,7 @@ import { AccessGuard } from '../guards/access.guard';
 import { ParseIntWithDefaultPipe } from '../pipes/parse-int-with-default.pipe';
 import { GroupsService } from '../services/groups.service';
 import { Group } from '../entities/group.entity';
+import { PermissionEnum } from '../entities/enums/permission.enum';
 
 
 @ApiUseTags('groups')
@@ -23,7 +24,7 @@ export class GroupsController {
 
     }
     @Roles('isSuperuser')
-    @Permissions('add_group')
+    @Permissions(PermissionEnum.add_group)
     @HttpCode(HttpStatus.CREATED)
     @ApiResponse({
         status: HttpStatus.CREATED, type: OutGroupDto,
@@ -46,7 +47,7 @@ export class GroupsController {
         }
     }
     @Roles('isSuperuser')
-    @Permissions('change_group')
+    @Permissions(PermissionEnum.change_group)
     @HttpCode(HttpStatus.OK)
     @ApiResponse({
         status: HttpStatus.OK, type: OutGroupDto,
@@ -72,7 +73,7 @@ export class GroupsController {
         }
     }
     @Roles('isSuperuser')
-    @Permissions('delete_group')
+    @Permissions(PermissionEnum.delete_group)
     @HttpCode(HttpStatus.NO_CONTENT)
     @ApiResponse({
         status: HttpStatus.NO_CONTENT,
@@ -95,7 +96,7 @@ export class GroupsController {
         }
     }
     @Roles('isSuperuser')
-    @Permissions('read_group')
+    @Permissions(PermissionEnum.read_group)
     @HttpCode(HttpStatus.OK)
     @ApiResponse({
         status: HttpStatus.OK, type: OutGroupDto,
@@ -119,7 +120,7 @@ export class GroupsController {
         }
     }
     @Roles('isSuperuser')
-    @Permissions('read_group')
+    @Permissions(PermissionEnum.read_group)
     @HttpCode(HttpStatus.OK)
     @ApiResponse({
         status: HttpStatus.OK, type: OutGroupsDto,

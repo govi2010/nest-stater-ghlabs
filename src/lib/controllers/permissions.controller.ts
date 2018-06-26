@@ -10,6 +10,7 @@ import { AccessGuard } from '../guards/access.guard';
 import { ParseIntWithDefaultPipe } from '../pipes/parse-int-with-default.pipe';
 import { PermissionsService } from '../services/permissions.service';
 import { Permission } from '../entities/permission.entity';
+import { PermissionEnum } from '../entities/enums/permission.enum';
 
 
 @ApiUseTags('permissions')
@@ -23,7 +24,7 @@ export class PermissionsController {
 
     }
     @Roles('isSuperuser')
-    @Permissions('add_permission')
+    @Permissions(PermissionEnum.add_permission)
     @HttpCode(HttpStatus.CREATED)
     @ApiResponse({
         status: HttpStatus.CREATED, type: OutPermissionDto,
@@ -46,7 +47,7 @@ export class PermissionsController {
         }
     }
     @Roles('isSuperuser')
-    @Permissions('change_permission')
+    @Permissions(PermissionEnum.change_permission)
     @HttpCode(HttpStatus.OK)
     @ApiResponse({
         status: HttpStatus.OK, type: OutPermissionDto,
@@ -72,7 +73,7 @@ export class PermissionsController {
         }
     }
     @Roles('isSuperuser')
-    @Permissions('delete_permission')
+    @Permissions(PermissionEnum.delete_permission)
     @HttpCode(HttpStatus.NO_CONTENT)
     @ApiResponse({
         status: HttpStatus.NO_CONTENT,
@@ -95,7 +96,7 @@ export class PermissionsController {
         }
     }
     @Roles('isSuperuser')
-    @Permissions('read_permission')
+    @Permissions(PermissionEnum.read_permission)
     @HttpCode(HttpStatus.OK)
     @ApiResponse({
         status: HttpStatus.OK, type: OutPermissionDto,
@@ -119,7 +120,7 @@ export class PermissionsController {
         }
     }
     @Roles('isSuperuser')
-    @Permissions('read_permission')
+    @Permissions(PermissionEnum.read_permission)
     @HttpCode(HttpStatus.OK)
     @ApiResponse({
         status: HttpStatus.OK, type: OutPermissionsDto,

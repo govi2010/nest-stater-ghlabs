@@ -11,6 +11,7 @@ import { OutAccountTokenDto } from '../dto/out-account-token.dto';
 import { AccessGuard } from '../guards/access.guard';
 import { AccountService } from '../services/account.service';
 import { User } from '../entities/user.entity';
+import { PermissionEnum } from '../entities/enums/permission.enum';
 
 @ApiUseTags('account')
 @Controller('/account')
@@ -85,7 +86,7 @@ export class AccountController {
 
   @ApiBearerAuth()
   @Roles('isActive')
-  @Permissions('change_profile')
+  @Permissions(PermissionEnum.change_profile)
   @HttpCode(HttpStatus.OK)
   @Post('/update')
   @ApiResponse({

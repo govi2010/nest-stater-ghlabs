@@ -10,6 +10,7 @@ import { AccessGuard } from '../guards/access.guard';
 import { ParseIntWithDefaultPipe } from '../pipes/parse-int-with-default.pipe';
 import { ContentTypesService } from '../services/content-types.service';
 import { ContentType } from '../entities/content-type.entity';
+import { PermissionEnum } from '../entities/enums/permission.enum';
 
 
 @ApiUseTags('content-types')
@@ -48,7 +49,7 @@ export class ContentTypesController {
   }
 
   @Roles('isSuperuser')
-  @Permissions('change_content-type')
+  @Permissions(PermissionEnum['change_content-type'])
   @HttpCode(HttpStatus.OK)
   @ApiResponse({
     status: HttpStatus.OK, type: OutContentTypeDto,
@@ -75,7 +76,7 @@ export class ContentTypesController {
   }
 
   @Roles('isSuperuser')
-  @Permissions('delete_content-type')
+  @Permissions(PermissionEnum['delete_content-type'])
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiResponse({
     status: HttpStatus.NO_CONTENT,
@@ -99,7 +100,7 @@ export class ContentTypesController {
   }
 
   @Roles('isSuperuser')
-  @Permissions('read_content-type')
+  @Permissions(PermissionEnum['read_content-type'])
   @HttpCode(HttpStatus.OK)
   @ApiResponse({
     status: HttpStatus.OK, type: OutContentTypeDto,
@@ -124,7 +125,7 @@ export class ContentTypesController {
   }
 
   @Roles('isSuperuser')
-  @Permissions('read_content-type')
+  @Permissions(PermissionEnum['read_content-type'])
   @HttpCode(HttpStatus.OK)
   @ApiResponse({
     status: HttpStatus.OK, type: OutContentTypesDto,

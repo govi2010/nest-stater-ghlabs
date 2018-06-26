@@ -11,6 +11,7 @@ import { AccessGuard } from '../guards/access.guard';
 import { ParseIntWithDefaultPipe } from '../pipes/parse-int-with-default.pipe';
 import { UsersService } from '../services/users.service';
 import { User } from '../entities/user.entity';
+import { PermissionEnum } from '../entities/enums/permission.enum';
 
 @ApiUseTags('users')
 @ApiBearerAuth()
@@ -24,7 +25,7 @@ export class UsersController {
   }
 
   @Roles('isSuperuser')
-  @Permissions('add_user')
+  @Permissions(PermissionEnum.add_user)
   @HttpCode(HttpStatus.CREATED)
   @ApiResponse({
     status: HttpStatus.CREATED, type: OutUserDto,
@@ -48,7 +49,7 @@ export class UsersController {
   }
 
   @Roles('isSuperuser')
-  @Permissions('change_user')
+  @Permissions(PermissionEnum.change_user)
   @HttpCode(HttpStatus.OK)
   @ApiResponse({
     status: HttpStatus.OK, type: OutUserDto,
@@ -75,7 +76,7 @@ export class UsersController {
   }
 
   @Roles('isSuperuser')
-  @Permissions('delete_user')
+  @Permissions(PermissionEnum.delete_user)
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiResponse({
     status: HttpStatus.NO_CONTENT,
@@ -99,7 +100,7 @@ export class UsersController {
   }
 
   @Roles('isSuperuser')
-  @Permissions('read_user')
+  @Permissions(PermissionEnum.read_user)
   @HttpCode(HttpStatus.OK)
   @ApiResponse({
     status: HttpStatus.OK, type: OutUserDto,
@@ -124,7 +125,7 @@ export class UsersController {
   }
 
   @Roles('isSuperuser')
-  @Permissions('read_user')
+  @Permissions(PermissionEnum.read_user)
   @HttpCode(HttpStatus.OK)
   @ApiResponse({
     status: HttpStatus.OK, type: OutUsersDto,
