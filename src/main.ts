@@ -9,7 +9,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { config } from 'dotenv';
 async function bootstrap() {
   config();
-  console.log(JSON.stringify(process.env.JWT_EXPIRATION_DELTA));
+  // console.log(JSON.stringify(process.env.JWT_EXPIRATION_DELTA));
   const packageBody = require('../package.json');
   const WWW_ROOT = path.resolve(__dirname, '..', 'www');
   const app = await NestFactory.create(AppModule, {

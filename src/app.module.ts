@@ -11,7 +11,7 @@ import { CoreModule } from './lib/core.module';
       type: 'mysql',
       host: 'localhost',
       port: 3306,
-      username: 'sa',
+      username: 'root',
       password: 'asd123',
       database: 'test',
       entities: [__dirname + '/../**/*.entity{.ts,.js}'],

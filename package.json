@@ -35,7 +35,7 @@
     "fastify-formbody": "^2.0.0",
     "jsonwebtoken": "^8.2.2",
     "mysql": "^2.15.0",
-    "node-django-hashers": "^1.0.9",
+    "node-django-hashers": "1.0.9",
     "reflect-metadata": "^0.1.12",
     "rxjs": "^6.0.0",
     "typeorm": "^0.2.7",
