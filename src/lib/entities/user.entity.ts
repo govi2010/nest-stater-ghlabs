@@ -14,7 +14,7 @@ import {
 
 import { Group } from './group.entity';
 import { CustomValidationError } from '../exceptions/custom-validation.error';
-import { BaseEntity } from './base/base.entity';
+import { BaseEntity } from './base';
 import { Permission } from './permission.entity';
 
 @Entity()
