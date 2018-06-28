@@ -4,11 +4,11 @@ import { BeforeInsert, BeforeUpdate, Column, Entity, JoinTable, ManyToMany, Prim
 import { Permission } from './permission.entity';
 import { User } from './user.entity';
 import { CustomValidationError } from '../exceptions/custom-validation.error';
-import { BaseEntity } from './base/base.entity';
+import { BaseEntity } from './base';
 
 @Entity()
 export class Group extends BaseEntity {
-  
+
   @Column({ length: 100, unique: true })
   @IsNotEmpty()
   @MaxLength(100)
@@ -23,7 +23,7 @@ export class Group extends BaseEntity {
     cascade: ['remove'],
   })
   @JoinTable({
-    //not work on run cli migration:
+    // not work on run cli migration:
     name: 'group_permissions',
     joinColumn: {
       name: 'group_id',
@@ -38,7 +38,7 @@ export class Group extends BaseEntity {
 
   @ManyToMany(type => User)
   @JoinTable({
-    //not work on run cli migration:
+    // not work on run cli migration:
     name: 'user_groups',
     joinColumn: {
       name: 'group_id',
