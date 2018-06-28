@@ -1,4 +1,13 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse, ApiUseTags } from '@nestjs/swagger';
 import { plainToClass } from 'class-transformer';
 import { Permissions } from '../decorators/permissions.decorator';
@@ -17,17 +26,15 @@ import { PermissionEnum } from '../entities/enums/permission.enum';
 @Controller('/account')
 @UseGuards(AccessGuard)
 export class AccountController {
-  constructor(
-    private accountService: AccountService,
-  ) {
-
-  }
+  constructor(private accountService: AccountService) {}
 
   @HttpCode(HttpStatus.OK)
   @Post('/info')
   @ApiResponse({
-    status: HttpStatus.OK, type: OutAccountTokenDto,
-    description: 'API View that checks the veracity of a token, returning the token if it is valid.',
+    status: HttpStatus.OK,
+    type: OutAccountTokenDto,
+    description:
+      'API View that checks the veracity of a token, returning the token if it is valid.',
   })
   async info(@Body() tokenDto: InTokenDto) {
     try {
@@ -45,8 +52,10 @@ export class AccountController {
   @HttpCode(HttpStatus.OK)
   @Post('/login')
   @ApiResponse({
-    status: HttpStatus.OK, type: OutAccountTokenDto,
-    description: 'API View that checks the veracity of a token, returning the token if it is valid.',
+    status: HttpStatus.OK,
+    type: OutAccountTokenDto,
+    description:
+      'API View that checks the veracity of a token, returning the token if it is valid.',
   })
   async login(@Body() accountLoginDto: InAccountLoginDto) {
     try {
@@ -65,7 +74,8 @@ export class AccountController {
   @HttpCode(HttpStatus.CREATED)
   @Post('/register')
   @ApiResponse({
-    status: HttpStatus.OK, type: OutAccountTokenDto,
+    status: HttpStatus.OK,
+    type: OutAccountTokenDto,
     description: `API View that receives a POST with a user's username and password.
         Returns a JSON Web Token that can be used for authenticated requests.`,
   })
@@ -90,7 +100,8 @@ export class AccountController {
   @HttpCode(HttpStatus.OK)
   @Post('/update')
   @ApiResponse({
-    status: HttpStatus.OK, type: OutAccountTokenDto,
+    status: HttpStatus.OK,
+    type: OutAccountTokenDto,
     description: '',
   })
   async update(@Req() req, @Body() accountDto: InAccountDto) {

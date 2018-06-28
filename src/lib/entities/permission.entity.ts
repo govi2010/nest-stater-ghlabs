@@ -18,8 +18,7 @@ import { BaseEntity } from './base/base.entity';
 
 @Entity()
 export class Permission extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  id: number = undefined;
+  @PrimaryGeneratedColumn() id: number = undefined;
 
   @Column({ length: 100 })
   @IsNotEmpty()

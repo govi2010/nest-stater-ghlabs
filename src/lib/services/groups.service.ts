@@ -1,17 +1,15 @@
-import { MethodNotAllowedException, Injectable } from '@nestjs/common';
+import { Injectable, MethodNotAllowedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
 import { Repository } from 'typeorm';
 import { Group } from '../entities/group.entity';
-
 
 @Injectable()
 export class GroupsService {
   items: Group[] = null;
 
   constructor(
-    @InjectRepository(Group)
-    private readonly repository: Repository<Group>,
+    @InjectRepository(Group) private readonly repository: Repository<Group>,
   ) {
     this.fullLoadAll();
   }
@@ -43,9 +41,7 @@ export class GroupsService {
       throw new MethodNotAllowedException('Not allowed in DEMO mode');
     }
     try {
-      let item = await this.repository.findOneOrFail(
-        options.id,
-      );
+      let item = await this.repository.findOneOrFail(options.id);
       item.permissions = [];
       item = await this.repository.save(item);
       await this.repository.delete(options.id);
@@ -57,10 +53,9 @@ export class GroupsService {
 
   async load(options: { id: number }) {
     try {
-      const item = await this.repository.findOneOrFail(
-        options.id,
-        { relations: ['permissions'] },
-      );
+      const item = await this.repository.findOneOrFail(options.id, {
+        relations: ['permissions'],
+      });
       return { group: item };
     } catch (error) {
       throw error;
@@ -79,11 +74,19 @@ export class GroupsService {
       qb = qb.leftJoinAndSelect('group.permissions', 'permission');
       qb = qb.leftJoinAndSelect('permission.contentType', 'contentType');
       if (options.q) {
-        qb = qb.where('group.title like :q or group.name like :q or group.id = :id', {
-          q: `%${options.q}%`, id: +options.q,
-        });
+        qb = qb.where(
+          'group.title like :q or group.name like :q or group.id = :id',
+          {
+            q: `%${options.q}%`,
+            id: +options.q,
+          },
+        );
       }
-      options.sort = options.sort && (new Group()).hasOwnProperty(options.sort.replace('-', '')) ? options.sort : '-id';
+      options.sort =
+        options.sort &&
+        new Group().hasOwnProperty(options.sort.replace('-', ''))
+          ? options.sort
+          : '-id';
       const field = options.sort.replace('-', '');
       if (options.sort) {
         if (options.sort[0] === '-') {
@@ -92,14 +95,18 @@ export class GroupsService {
           qb = qb.orderBy('group.' + field, 'ASC');
         }
       }
-      qb = qb.skip((options.curPage - 1) * options.perPage)
+      qb = qb
+        .skip((options.curPage - 1) * options.perPage)
         .take(options.perPage);
       objects = await qb.getManyAndCount();
       return {
         groups: objects[0],
         meta: {
           perPage: options.perPage,
-          totalPages: options.perPage > objects[1] ? 1 : Math.ceil(objects[1] / options.perPage),
+          totalPages:
+            options.perPage > objects[1]
+              ? 1
+              : Math.ceil(objects[1] / options.perPage),
           totalResults: objects[1],
           curPage: options.curPage,
         },
@@ -110,7 +117,7 @@ export class GroupsService {
   }
 
   getGroupByName(name: string) {
-    let groups = this.items.filter(group => group.name === name);
+    const groups = this.items.filter(group => group.name === name);
     if (groups.length) {
       return groups[0];
     }
@@ -120,7 +127,8 @@ export class GroupsService {
   async fullLoadAll() {
     if (this.items === null) {
       try {
-        const groups = await this.repository.createQueryBuilder('group')
+        const groups = await this.repository
+          .createQueryBuilder('group')
           .leftJoinAndSelect('group.permissions', 'permission')
           .getMany();
         this.items = plainToClass(Group, groups);

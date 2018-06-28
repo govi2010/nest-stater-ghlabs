@@ -4,11 +4,9 @@ import { Type } from 'class-transformer';
 import { AccountDto } from './account.dto';
 
 export class OutAccountTokenDto {
+  @ApiModelProperty() token: string;
 
-    @ApiModelProperty()
-    token: string;
-
-    @Type(() => AccountDto)
-    @ApiModelProperty({ type: AccountDto })
-    user: AccountDto;
+  @Type(() => AccountDto)
+  @ApiModelProperty({ type: AccountDto })
+  user: AccountDto;
 }

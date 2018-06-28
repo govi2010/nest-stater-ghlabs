@@ -6,10 +6,10 @@ import { ContentTypesService } from './content-types.service';
 import { PermissionsService } from './permissions.service';
 
 export const services = [
-    TokenService,
-    AccountService,
-    GroupsService,
-    UsersService,
-    ContentTypesService,
-    PermissionsService
-]
+  TokenService,
+  AccountService,
+  GroupsService,
+  UsersService,
+  ContentTypesService,
+  PermissionsService,
+];

@@ -1,4 +1,4 @@
-import { ArgumentMetadata, PipeTransform, Injectable } from '@nestjs/common';
+import { ArgumentMetadata, Injectable, PipeTransform } from '@nestjs/common';
 import { plainToClass } from 'class-transformer';
 import { validate } from 'class-validator';
 import { CustomValidationError } from '../exceptions/custom-validation.error';
@@ -11,7 +11,9 @@ export class ValidationPipe implements PipeTransform<any> {
       return value;
     }
     const entity = plainToClass(metatype, value);
-    const errors = await validate(entity, { validationError: { target: false } });
+    const errors = await validate(entity, {
+      validationError: { target: false },
+    });
     if (errors.length > 0) {
       throw new CustomValidationError(errors);
     }

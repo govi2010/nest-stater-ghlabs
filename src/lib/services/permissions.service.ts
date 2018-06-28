@@ -3,14 +3,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Permission } from '../entities/permission.entity';
 
-
 @Injectable()
 export class PermissionsService {
   constructor(
     @InjectRepository(Permission)
     private readonly repository: Repository<Permission>,
-  ) {
-  }
+  ) {}
 
   async create(options: { item: Permission }) {
     try {
@@ -48,10 +46,9 @@ export class PermissionsService {
 
   async load(options: { id: number }) {
     try {
-      const item = await this.repository.findOneOrFail(
-        options.id,
-        { relations: ['contentType'] },
-      );
+      const item = await this.repository.findOneOrFail(options.id, {
+        relations: ['contentType'],
+      });
       return { permission: item };
     } catch (error) {
       throw error;
@@ -76,14 +73,24 @@ export class PermissionsService {
           .where('group.id = :group', { group: options.group });
       }
       if (options.q) {
-        qb = qb.where('permission.name like :q or permission.title like :q or permission.id = :id', {
-          q: `%${options.q}%`, id: +options.q,
-        });
+        qb = qb.where(
+          'permission.name like :q or permission.title like :q or permission.id = :id',
+          {
+            q: `%${options.q}%`,
+            id: +options.q,
+          },
+        );
       }
       if (options.contentType) {
-        qb = qb.where('contentType.id = :contentType', { contentType: options.contentType });
+        qb = qb.where('contentType.id = :contentType', {
+          contentType: options.contentType,
+        });
       }
-      options.sort = options.sort && (new Permission()).hasOwnProperty(options.sort.replace('-', '')) ? options.sort : '-id';
+      options.sort =
+        options.sort &&
+        new Permission().hasOwnProperty(options.sort.replace('-', ''))
+          ? options.sort
+          : '-id';
       const field = options.sort.replace('-', '');
       if (options.sort) {
         if (options.sort[0] === '-') {
@@ -92,14 +99,18 @@ export class PermissionsService {
           qb = qb.orderBy('permission.' + field, 'ASC');
         }
       }
-      qb = qb.skip((options.curPage - 1) * options.perPage)
+      qb = qb
+        .skip((options.curPage - 1) * options.perPage)
         .take(options.perPage);
       objects = await qb.getManyAndCount();
       return {
         permissions: objects[0],
         meta: {
           perPage: options.perPage,
-          totalPages: options.perPage > objects[1] ? 1 : Math.ceil(objects[1] / options.perPage),
+          totalPages:
+            options.perPage > objects[1]
+              ? 1
+              : Math.ceil(objects[1] / options.perPage),
           totalResults: objects[1],
           curPage: options.curPage,
         },

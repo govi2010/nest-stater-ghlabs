@@ -28,26 +28,28 @@ export class TokenService {
   }
 
   verify(token: string) {
-    const data: any = decode(
-      token,
-    );
+    const data: any = decode(token);
     return verify(token, this.getSecretKey(data));
   }
 
   decode(token: string) {
-    return decode(
-      token,
-    );
+    return decode(token);
   }
 
   getSecretKey(data: any) {
-    return process.env.SECRET_KEY +
-      (data ? (
-        '$' + data.id +
-        '$' + data.isStaff +
-        '$' + data.isActive +
-        '$' + data.isSuperuser +
-        (data.groups ? data.groups.map(group => '$' + group.name) : '')
-      ) : '');
+    return (
+      process.env.SECRET_KEY +
+      (data
+        ? '$' +
+          data.id +
+          '$' +
+          data.isStaff +
+          '$' +
+          data.isActive +
+          '$' +
+          data.isSuperuser +
+          (data.groups ? data.groups.map(group => '$' + group.name) : '')
+        : '')
+    );
   }
 }

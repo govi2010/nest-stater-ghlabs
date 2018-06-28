@@ -5,9 +5,9 @@ import { PermissionsController } from './permissions.controller';
 import { UsersController } from './users.controller';
 
 export const controllers = [
-    AccountController,
-    ContentTypesController,
-    PermissionsController,
-    UsersController,
-    GroupsController
-]
+  AccountController,
+  ContentTypesController,
+  PermissionsController,
+  UsersController,
+  GroupsController,
+];

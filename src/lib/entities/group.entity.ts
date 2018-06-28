@@ -1,5 +1,12 @@
 import { IsNotEmpty, MaxLength, validateSync } from 'class-validator';
-import { BeforeInsert, BeforeUpdate, Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BeforeInsert,
+  BeforeUpdate,
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+} from 'typeorm';
 
 import { Permission } from './permission.entity';
 import { User } from './user.entity';
@@ -8,7 +15,6 @@ import { BaseEntity } from './base';
 
 @Entity()
 export class Group extends BaseEntity {
-
   @Column({ length: 100, unique: true })
   @IsNotEmpty()
   @MaxLength(100)

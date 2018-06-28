@@ -1,16 +1,14 @@
-import { MethodNotAllowedException, Injectable } from '@nestjs/common';
+import { Injectable, MethodNotAllowedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ContentType } from '../entities/content-type.entity';
-
 
 @Injectable()
 export class ContentTypesService {
   constructor(
     @InjectRepository(ContentType)
     private readonly repository: Repository<ContentType>,
-  ) {
-  }
+  ) {}
 
   async create(options: { item: ContentType }) {
     try {
@@ -42,10 +40,9 @@ export class ContentTypesService {
       throw new MethodNotAllowedException('Not allowed in DEMO mode');
     }
     try {
-      let item = await this.repository.findOneOrFail(
-        options.id,
-        { relations: ['permissions'] },
-      );
+      let item = await this.repository.findOneOrFail(options.id, {
+        relations: ['permissions'],
+      });
       item.permissions = [];
       item = await this.repository.save(item);
       await this.repository.delete(options.id);
@@ -57,10 +54,9 @@ export class ContentTypesService {
 
   async load(options: { id: number }) {
     try {
-      const item = await this.repository.findOneOrFail(
-        options.id,
-        { relations: ['permissions'] },
-      );
+      const item = await this.repository.findOneOrFail(options.id, {
+        relations: ['permissions'],
+      });
       return { contentType: item };
     } catch (error) {
       throw error;
@@ -77,11 +73,19 @@ export class ContentTypesService {
       let objects: [ContentType[], number];
       let qb = this.repository.createQueryBuilder('contentType');
       if (options.q) {
-        qb = qb.where('contentType.name like :q or contentType.title like :q or contentType.id = :id', {
-          q: `%${options.q}%`, id: +options.q,
-        });
+        qb = qb.where(
+          'contentType.name like :q or contentType.title like :q or contentType.id = :id',
+          {
+            q: `%${options.q}%`,
+            id: +options.q,
+          },
+        );
       }
-      options.sort = options.sort && (new ContentType()).hasOwnProperty(options.sort.replace('-', '')) ? options.sort : '-id';
+      options.sort =
+        options.sort &&
+        new ContentType().hasOwnProperty(options.sort.replace('-', ''))
+          ? options.sort
+          : '-id';
       const field = options.sort.replace('-', '');
       if (options.sort) {
         if (options.sort[0] === '-') {
@@ -90,14 +94,18 @@ export class ContentTypesService {
           qb = qb.orderBy('contentType.' + field, 'ASC');
         }
       }
-      qb = qb.skip((options.curPage - 1) * options.perPage)
+      qb = qb
+        .skip((options.curPage - 1) * options.perPage)
         .take(options.perPage);
       objects = await qb.getManyAndCount();
       return {
         contentTypes: objects[0],
         meta: {
           perPage: options.perPage,
-          totalPages: options.perPage > objects[1] ? 1 : Math.ceil(objects[1] / options.perPage),
+          totalPages:
+            options.perPage > objects[1]
+              ? 1
+              : Math.ceil(objects[1] / options.perPage),
           totalResults: objects[1],
           curPage: options.curPage,
         },

@@ -1,4 +1,4 @@
-import { Injectable, MethodNotAllowedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
@@ -6,10 +6,8 @@ import { User } from '../entities/user.entity';
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectRepository(User)
-    private readonly repository: Repository<User>,
-  ) {
-  }
+    @InjectRepository(User) private readonly repository: Repository<User>,
+  ) {}
 
   async create(options: { item: User }) {
     try {
@@ -32,9 +30,7 @@ export class UsersService {
 
   async delete(options: { id: number }) {
     try {
-      let object = await this.repository.findOneOrFail(
-        options.id,
-      );
+      let object = await this.repository.findOneOrFail(options.id);
       object.groups = [];
       object = await this.repository.save(object);
       await this.repository.delete(options.id);
@@ -46,10 +42,9 @@ export class UsersService {
 
   async load(options: { id: number }) {
     try {
-      const item = await this.repository.findOneOrFail(
-        options.id,
-        { relations: ['groups', 'groups.permissions'] },
-      );
+      const item = await this.repository.findOneOrFail(options.id, {
+        relations: ['groups', 'groups.permissions'],
+      });
       return { user: item };
     } catch (error) {
       throw error;
@@ -67,7 +62,8 @@ export class UsersService {
       let objects: [User[], number];
       let qb = this.repository.createQueryBuilder('user');
       if (options.group) {
-        qb = qb.leftJoinAndSelect('user.groups', 'group')
+        qb = qb
+          .leftJoinAndSelect('user.groups', 'group')
           .where('group.id = :group', { group: options.group });
       } else {
         qb = qb.leftJoinAndSelect('user.groups', 'group');
@@ -75,11 +71,18 @@ export class UsersService {
         qb = qb.leftJoinAndSelect('permission.contentType', 'contentType');
       }
       if (options.q) {
-        qb = qb.where('user.first_name like :q or user.last_name like :q or user.username like :q or user.id = :id', {
-          q: `%${options.q}%`, id: +options.q,
-        });
+        qb = qb.where(
+          'user.first_name like :q or user.last_name like :q or user.username like :q or user.id = :id',
+          {
+            q: `%${options.q}%`,
+            id: +options.q,
+          },
+        );
       }
-      options.sort = options.sort && (new User()).hasOwnProperty(options.sort.replace('-', '')) ? options.sort : '-id';
+      options.sort =
+        options.sort && new User().hasOwnProperty(options.sort.replace('-', ''))
+          ? options.sort
+          : '-id';
       const field = options.sort.replace('-', '');
       if (options.sort) {
         if (options.sort[0] === '-') {
@@ -88,14 +91,18 @@ export class UsersService {
           qb = qb.orderBy('user.' + field, 'ASC');
         }
       }
-      qb = qb.skip((options.curPage - 1) * options.perPage)
+      qb = qb
+        .skip((options.curPage - 1) * options.perPage)
         .take(options.perPage);
       objects = await qb.getManyAndCount();
       return {
         users: objects[0],
         meta: {
           perPage: options.perPage,
-          totalPages: options.perPage > objects[1] ? 1 : Math.ceil(objects[1] / options.perPage),
+          totalPages:
+            options.perPage > objects[1]
+              ? 1
+              : Math.ceil(objects[1] / options.perPage),
           totalResults: objects[1],
           curPage: options.curPage,
         },

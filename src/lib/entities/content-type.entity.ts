@@ -1,13 +1,12 @@
 import { IsNotEmpty, MaxLength, validateSync } from 'class-validator';
-import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany } from 'typeorm';
 
 import { Permission } from './permission.entity';
 import { CustomValidationError } from '../exceptions/custom-validation.error';
 import { BaseEntity } from './base/base.entity';
 
 @Entity({ name: 'content_type' })
-export class ContentType extends BaseEntity{
-
+export class ContentType extends BaseEntity {
   @Column({ length: 100 })
   @IsNotEmpty()
   @MaxLength(100)
@@ -25,7 +24,7 @@ export class ContentType extends BaseEntity{
   doBeforeInsertion() {
     const errors = validateSync(this, { validationError: { target: false } });
     if (errors.length > 0) {
-      throw new CustomValidationError(errors)
+      throw new CustomValidationError(errors);
     }
   }
 
@@ -33,7 +32,7 @@ export class ContentType extends BaseEntity{
   doBeforeUpdate() {
     const errors = validateSync(this, { validationError: { target: false } });
     if (errors.length > 0) {
-      throw new CustomValidationError(errors)
+      throw new CustomValidationError(errors);
     }
   }
 }

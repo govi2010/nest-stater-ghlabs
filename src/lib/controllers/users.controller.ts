@@ -1,5 +1,24 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Put, Query, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiImplicitParam, ApiImplicitQuery, ApiResponse, ApiUseTags } from '@nestjs/swagger';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  ParseIntPipe,
+  Post,
+  Put,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiImplicitParam,
+  ApiImplicitQuery,
+  ApiResponse,
+  ApiUseTags,
+} from '@nestjs/swagger';
 import { plainToClass } from 'class-transformer';
 import { Permissions } from '../decorators/permissions.decorator';
 import { Roles } from '../decorators/roles.decorator';
@@ -18,24 +37,19 @@ import { PermissionEnum } from '../entities/enums/permission.enum';
 @Controller('/users')
 @UseGuards(AccessGuard)
 export class UsersController {
-  constructor(
-    private readonly service: UsersService,
-  ) {
-
-  }
+  constructor(private readonly service: UsersService) {}
 
   @Roles('isSuperuser')
   @Permissions(PermissionEnum.add_user)
   @HttpCode(HttpStatus.CREATED)
   @ApiResponse({
-    status: HttpStatus.CREATED, type: OutUserDto,
+    status: HttpStatus.CREATED,
+    type: OutUserDto,
     description: 'The record has been successfully created.',
   })
   @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Forbidden.' })
   @Post()
-  async create(
-    @Body() dto: InCreateUserDto,
-  ) {
+  async create(@Body() dto: InCreateUserDto) {
     try {
       return plainToClass(
         OutUserDto,
@@ -52,14 +66,16 @@ export class UsersController {
   @Permissions(PermissionEnum.change_user)
   @HttpCode(HttpStatus.OK)
   @ApiResponse({
-    status: HttpStatus.OK, type: OutUserDto,
+    status: HttpStatus.OK,
+    type: OutUserDto,
     description: 'The record has been successfully updated.',
   })
   @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Forbidden.' })
   @ApiImplicitParam({ name: 'id', type: Number })
   @Put(':id')
   async update(
-    @Param('id', new ParseIntPipe()) id,
+    @Param('id', new ParseIntPipe())
+    id,
     @Body() dto: InUserDto,
   ) {
     try {
@@ -86,10 +102,12 @@ export class UsersController {
   @ApiImplicitParam({ name: 'id', type: Number })
   @Delete(':id')
   async delete(
-    @Param('id', new ParseIntPipe()) id,
+    @Param('id', new ParseIntPipe())
+    id,
   ) {
     try {
-      return plainToClass(OutUserDto,
+      return plainToClass(
+        OutUserDto,
         await this.service.delete({
           id,
         }),
@@ -103,14 +121,16 @@ export class UsersController {
   @Permissions(PermissionEnum.read_user)
   @HttpCode(HttpStatus.OK)
   @ApiResponse({
-    status: HttpStatus.OK, type: OutUserDto,
+    status: HttpStatus.OK,
+    type: OutUserDto,
     description: '',
   })
   @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Forbidden.' })
   @ApiImplicitParam({ name: 'id', type: Number })
   @Get(':id')
   async load(
-    @Param('id', new ParseIntPipe()) id,
+    @Param('id', new ParseIntPipe())
+    id,
   ) {
     try {
       return plainToClass(
@@ -128,28 +148,47 @@ export class UsersController {
   @Permissions(PermissionEnum.read_user)
   @HttpCode(HttpStatus.OK)
   @ApiResponse({
-    status: HttpStatus.OK, type: OutUsersDto,
+    status: HttpStatus.OK,
+    type: OutUsersDto,
     description: '',
   })
   @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Forbidden.' })
-  @ApiImplicitQuery({ name: 'q', required: false, type: String, description: 'Text for search (default: empty)' })
-  @ApiImplicitQuery({ name: 'sort', required: false, type: String, description: 'Column name for sort (default: -id)' })
   @ApiImplicitQuery({
-    name: 'per_page', required: false, type: Number,
+    name: 'q',
+    required: false,
+    type: String,
+    description: 'Text for search (default: empty)',
+  })
+  @ApiImplicitQuery({
+    name: 'sort',
+    required: false,
+    type: String,
+    description: 'Column name for sort (default: -id)',
+  })
+  @ApiImplicitQuery({
+    name: 'per_page',
+    required: false,
+    type: Number,
     description: 'Number of results to return per page. (default: 10)',
   })
   @ApiImplicitQuery({
-    name: 'cur_page', required: false, type: Number,
+    name: 'cur_page',
+    required: false,
+    type: Number,
     description: 'A page number within the paginated result set. (default: 1)',
   })
   @ApiImplicitQuery({
-    name: 'group', required: false, type: Number,
+    name: 'group',
+    required: false,
+    type: Number,
     description: 'Group id for filter data by group. (default: empty)',
   })
   @Get()
   async loadAll(
-    @Query('cur_page', new ParseIntWithDefaultPipe(1)) curPage,
-    @Query('per_page', new ParseIntWithDefaultPipe(10)) perPage,
+    @Query('cur_page', new ParseIntWithDefaultPipe(1))
+    curPage,
+    @Query('per_page', new ParseIntWithDefaultPipe(10))
+    perPage,
     @Query('q') q,
     @Query('group') group,
     @Query('sort') sort,

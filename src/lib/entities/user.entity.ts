@@ -1,4 +1,10 @@
-import { IsEmail, IsNotEmpty, IsOptional, MaxLength, validateSync } from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsOptional,
+  MaxLength,
+  validateSync,
+} from 'class-validator';
 import * as hashers from 'node-django-hashers';
 import {
   BeforeInsert,
@@ -19,8 +25,7 @@ import { Permission } from './permission.entity';
 
 @Entity()
 export class User extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  id: number = undefined;
+  @PrimaryGeneratedColumn() id: number = undefined;
 
   @Column({ length: 128 })
   @MaxLength(128)
@@ -133,10 +138,15 @@ export class User extends BaseEntity {
 
   checkPermissions(permissions: string[]) {
     permissions = permissions.map(permission => permission.toLowerCase());
-    return this.groups.filter(group =>
-      group && group.permissions.filter(permission =>
-      permissions.indexOf(permission.name.toLowerCase()) !== -1,
-      ).length > 0,
-    ).length > 0;
+    return (
+      this.groups.filter(
+        group =>
+          group &&
+          group.permissions.filter(
+            permission =>
+              permissions.indexOf(permission.name.toLowerCase()) !== -1,
+          ).length > 0,
+      ).length > 0
+    );
   }
 }

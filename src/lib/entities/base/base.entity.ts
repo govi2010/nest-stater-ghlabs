@@ -1,8 +1,7 @@
 import { Column, CreateDateColumn, PrimaryGeneratedColumn } from 'typeorm';
 
 export abstract class BaseEntity {
-  @PrimaryGeneratedColumn()
-  id: number = undefined;
+  @PrimaryGeneratedColumn() id: number = undefined;
 
   @CreateDateColumn({ name: 'created_date' })
   createdDate: Date = undefined;
